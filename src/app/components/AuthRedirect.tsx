@@ -1,3 +1,5 @@
+'use client';
+/* hooks */
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
