@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     }else{
       return NextResponse.json({
         status: 500,
-        message: "Failed to authenticate user",
+        message: "Invalid email or password",
         error: true,
       })
     }
