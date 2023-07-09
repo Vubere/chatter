@@ -328,7 +328,6 @@ const fakeFeed:feed[] = [
 const fakeUser:User = {
   firstName: "John",
   lastName: "Doe",
-  username: "johndoe",
   profileViews: 100,
   avatar: "https://randomuser.me/api/portraits/men/1.jpg",
   profession: "Writer",
