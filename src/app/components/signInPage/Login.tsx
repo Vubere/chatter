@@ -69,8 +69,6 @@ export default function Login() {
     } else {
       console.log(res)
       configureAlert('error', res.message||"An error occured")
-
-      
     }
   }
 
