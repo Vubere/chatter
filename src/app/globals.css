@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+*{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::-webkit-scrollbar{
+  display:none;
+  width: 0;
+}
+body::-webkit-scrollbar-thumb {
+  display:none;
+}
+
+body::-webkit-scrollbar-track {
+  display:none;
+}
