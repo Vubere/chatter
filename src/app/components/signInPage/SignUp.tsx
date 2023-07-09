@@ -65,8 +65,9 @@ export default function SignUp() {
 
     if(!user?.error){
       dispatch(setUser({...user.user, password: encrypt(data.password)}))
-
-      localStorage.setItem('chatterUser', JSON.stringify({...user.user, password: encrypt(data.password)}))
+      if(typeof window !== 'undefined'){
+        window.localStorage.setItem('chatterUser', JSON.stringify({...user.user, password: encrypt(data.password)}))
+      }
 
       configureAlert('success','User registered successfully', ()=>{
         router.push('/dashboard')

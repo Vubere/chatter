@@ -10,6 +10,7 @@ export default function AuthRedirect() {
 
 
   useEffect(() => {
+    if(typeof window === 'undefined') return
     const token = localStorage.getItem('chatterUser')
     if (token) {
       router.push('/dashboard')

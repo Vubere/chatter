@@ -10,9 +10,11 @@ function Logout() {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const logout = () => {
-    localStorage.removeItem('chatterUser')
-    dispatch(removeUser())
-    router.push('/login')
+    if(typeof window !== 'undefined') {
+      window.localStorage.removeItem('chatterUser')
+      dispatch(removeUser())
+      router.push('/login')
+    }
   }
   return (
     <section className='w-[80%] pl-4'>

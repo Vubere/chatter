@@ -1,28 +1,31 @@
-"use client"
+"use client";
 
 /* rtk */
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 /* types */
-import { User } from "@/types"
+import { User } from "@/types";
 
+let initialState: User | null = null;
 
-let initialState: User|null = localStorage.getItem('chatterUser') ? JSON.parse(localStorage.getItem('chatterUser')!) : null ;
-
+if (typeof window !== "undefined") {
+  initialState = localStorage.getItem("chatterUser")
+    ? JSON.parse(localStorage.getItem("chatterUser")!)
+    : null;
+}
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      return action.payload
+      return action.payload;
     },
     removeUser: () => {
-      return null
-    }
-  }
-})
+      return null;
+    },
+  },
+});
 
-
-export const { setUser, removeUser } = userSlice.actions
-export default userSlice.reducer
+export const { setUser, removeUser } = userSlice.actions;
+export default userSlice.reducer;
