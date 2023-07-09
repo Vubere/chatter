@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function getUser(id: string | number) {
+async function getUser(id: string | number) {
   try {
     const res = await UserModel.findById(id);
     if (!res) {
@@ -37,8 +37,7 @@ export async function getUser(id: string | number) {
     });
   }
 }
-
-export async function getAllUsers() {
+async function getAllUsers() {
   try {
     const res = await UserModel.find();
     if (!res) {
