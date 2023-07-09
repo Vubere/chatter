@@ -16,12 +16,6 @@ import bgImg from '@/assets/signUpPage/bgImg.png'
 
 
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Sign In'
-  }
-}
-
 
 
 export default function SignIn() {
