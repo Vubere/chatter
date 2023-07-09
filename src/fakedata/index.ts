@@ -340,8 +340,8 @@ const fakeUser:User = {
   likes: [1,2,3,4,5,6,7,8,9,10],
   comments: [1,2,3,4,5,6,7,8,9,10],
   notifications: [1,2,3,4,5,6,7,8,9,10],
-  createdAt: "2021-01-01",
-  updatedAt: "2021-01-01",
+  createdAt: new Date(),
+  updatedAt: new Date(),
   email: "john@gmail.com",
   password: "johndoe",
 }
