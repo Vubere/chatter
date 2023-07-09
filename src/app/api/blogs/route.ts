@@ -62,11 +62,3 @@ async function getAllBlogs() {
     }
 }
 
-/* POST REQUEST */
-export async function POST() {}
-
-/* UPDATE REQUEST */
-export async function UPDATE() {}
-
-/* DELETE REQUEST */
-export async function DELETE() {}
