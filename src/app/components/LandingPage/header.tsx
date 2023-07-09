@@ -16,6 +16,7 @@ export default function Header() {
 
 
   const setSignInView = (view: string) => {
+    if(typeof window === 'undefined') return
     sessionStorage.setItem('suv', view)
     router.push('sign-in')
   }

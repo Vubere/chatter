@@ -19,7 +19,9 @@ import bgImg from '@/assets/signUpPage/bgImg.png'
 
 
 export default function SignIn() {
-  let ses = sessionStorage.getItem('suv')
+  let ses:any = 'Sign up'
+  if(typeof window !== 'undefined')
+  ses = sessionStorage.getItem('suv')
   
   if (!ses) {
     ses = 'Login'
