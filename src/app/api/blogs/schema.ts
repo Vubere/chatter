@@ -4,6 +4,7 @@ import db from "../db";
 interface IBlogPost extends Document {
   title: string;
   content: string;
+  coverImage: string;
   author: string;
   likes: number;
   comments: number;
@@ -11,6 +12,7 @@ interface IBlogPost extends Document {
   updatedAt: Date;
   views: number;
   tags: string[];
+  state: 'Published'|'Draft';
 }
 
 const blogPostSchema = new Schema<IBlogPost>({
@@ -19,6 +21,10 @@ const blogPostSchema = new Schema<IBlogPost>({
     required: true,
   },
   content: {
+    type: String,
+    required: true,
+  },
+  coverImage:{
     type: String,
     required: true,
   },
@@ -50,6 +56,10 @@ const blogPostSchema = new Schema<IBlogPost>({
     type: [String],
     default: [],
   },
+  state: {
+    type: String,
+    default: 'Draft'
+  }
 });
 function bgModel(){
   return db.models.blogs||db.model<IBlogPost>("blogs", blogPostSchema);

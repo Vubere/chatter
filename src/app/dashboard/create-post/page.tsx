@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Markdown from "marked-react";
 /* custom elements */
 import { BlueButton, GreenButton } from "@/app/components/Buttons";
+import ImageUploadButton from "@/app/components/UploadImage";
 
 /* images */
 import add from "@/icons/add.svg";
@@ -47,6 +48,8 @@ export default function CreatePost() {
     role: 'newLine' | 'inLine'
   }>({ type: 'newLine', role: 'newLine' })
   const [showInsertPopup, setShowInsertPopup] = useState(false)
+  const [showImagePopup, setShowImagePopup] = useState(false)
+  const [coverImageUrl, setCoverImageUrl] = useState('')
 
 
 
@@ -81,7 +84,7 @@ export default function CreatePost() {
 
   const handleSetInsert = (type: string) => {
     switch (type) {
-      case 'image': ;
+      case 'image': setShowImagePopup(true); break;
       case 'link': setLinkPopup(true); break;
       case 'code block': openInsertElement(type, 'newLine'); break;
       case 'quote': openInsertElement(type, 'newLine'); break;
@@ -111,9 +114,13 @@ export default function CreatePost() {
     setShowElementPopup(false)
   }
 
-  const onImageSubmit = () => {
-    const val = `![${'linkText'}](${'linkUrl'})`
-    setBlogText(prev => prev + '\n' + val)
+  const onImageSubmit = (arg: {
+    url: string,
+    alt: string
+  }) => {
+    setBlogText(prev => prev + ' ' + `![${arg.alt}](${arg.url})`)
+    setShowImagePopup(false)
+    setShowElementPopup(false)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -138,12 +145,19 @@ export default function CreatePost() {
 
   const onBlogSubmmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const blog = {
+      title: header,
+      imageCover: '',
+      content: text,
+    }
   }
+
+  const ci_alt = coverImageUrl ? 'cover image':''
 
 
 
   return (
-    <main className="p-4">
+    <main className="p-4 h-[100vh] overflow-y-auto">
       <div className="flex justify-end gap-4">
         <BlueButton>
           <span className="text-white">Save to Draft</span>
@@ -152,21 +166,35 @@ export default function CreatePost() {
           <span className="text-white">Publish</span>
         </GreenButton>
       </div>
+      <div className="flex items-end py-10 flex-col ">
+        <p>
+          Add cover Image <span className="text-[#050]">*required</span>
+        </p>
+        <ImageUploadButton
+          fn={(images: any[], err?: string) => {
+            if (err) {
+              return alert(err)
+            }
+            setCoverImageUrl(images[0].fileUrl)
+          }}
+        />
+      </div>
       <div className='flex mt-10'>
         <div className="h-full w-[80px] pb-[10%] flex items-end">
           <button className="rounded-full block border w-[40px] h-[40px] " role="add content" onClick={() => setShowElementPopup(prev => !prev)} >
             <Image src={add} alt="add" width={35} height={35} />
           </button>
         </div>
+
         <div className="w-full h-[100vh] overflow-y-auto flex gap-[8%]">
-          <form onSubmit={onBlogSubmmit} className='w-[45%] h-[60vh] border p-2'>
-            <input placeholder="Title" className="w-full h-[40px] p-3 border-none text-[34px] focus:outline-none"
+          <form onSubmit={onBlogSubmmit} className='w-[45%] h-[60vh] max-h-[700px] border p-2'>
+            <input placeholder="Title" className="w-full h-[10%] min-h-[50px] max-h-[60px] p-3 border-none text-[34px] focus:outline-none"
               value={header} onChange={({ target }) => setBlogHeader(target.value)} />
-            <textarea className="w-full h-full p-3 border-none focus:outline-none text-[22px] placeholder:text-[22px]" value={text} onChange={onChange} placeholder="Write a Post...." />
+            <textarea className="w-full h-[85%] p-3 border-none focus:outline-none text-[22px] placeholder:text-[22px]" value={text} onChange={onChange} placeholder="Write a Post...." />
           </form>
           <div className='w-[45%] h-[60vh] border overflow-y-auto md p-8'>
             <Markdown>
-              {'# ' + header + '\n' + text}
+              {'# ' + header +'\n'+'!['+ci_alt+']('+coverImageUrl+')' + '\n' + text}
             </Markdown>
           </div>
         </div>
@@ -206,16 +234,17 @@ export default function CreatePost() {
         </div>
       )}
       {
-        linkPopup && <LinkPopup onLinkSubmit={onLinkSubmit}  close={()=>{setLinkPopup(false)}}/>
+        linkPopup && <LinkPopup onLinkSubmit={onLinkSubmit} close={() => { setLinkPopup(false) }} />
       }
       {
-        showInsertPopup && <InsertElement role={insert.role} element={insert.type} onElementSubmit={handleInsertElement} close={()=>{setShowInsertPopup(false)}}/>
+        showInsertPopup && <InsertElement role={insert.role} element={insert.type} onElementSubmit={handleInsertElement} close={() => { setShowInsertPopup(false) }} />
       }
+      {showImagePopup && <InsertImages setImage={onImageSubmit} close={() => { setShowImagePopup(false) }} />}
     </main>
   )
 }
 
-const LinkPopup = ({ onLinkSubmit,close }: { onLinkSubmit: (url: string, text: string) => string | void, close:()=>void }) => {
+const LinkPopup = ({ onLinkSubmit, close }: { onLinkSubmit: (url: string, text: string) => string | void, close: () => void }) => {
   const [linkUrl, setLinkUrl] = useState('')
   const [linkText, setLinkText] = useState('')
   const [error, setError] = useState('')
@@ -241,7 +270,7 @@ const LinkPopup = ({ onLinkSubmit,close }: { onLinkSubmit: (url: string, text: s
   return (
     <div className="fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] w-[90vw] max-w-[400px] h-[200px] p-2  border shadow-xl bg-white overflow-y-auto z-[400] flex items-center ">
       <div>
-        <button className="rounded-full block border w-[30px] h-[30px] absolute top-[3px] right-[8px] bg-white" role="close pop up" onClick={() =>close()} >
+        <button className="rounded-full block border w-[30px] h-[30px] absolute top-[3px] right-[8px] bg-white" role="close pop up" onClick={() => close()} >
           x
         </button>
       </div>
@@ -260,7 +289,7 @@ const LinkPopup = ({ onLinkSubmit,close }: { onLinkSubmit: (url: string, text: s
   )
 }
 
-const InsertElement = ({ role, element, onElementSubmit,close }: {
+const InsertElement = ({ role, element, onElementSubmit, close }: {
   role: "newLine" | "inLine",
   element: string,
   onElementSubmit: (role: 'newLine' | 'inLine', element: string, text: string) => void,
@@ -279,16 +308,84 @@ const InsertElement = ({ role, element, onElementSubmit,close }: {
       </button>
       <label htmlFor="element" className="bold capitalize w-full">{element} text</label>
       {
-        role === 'newLine' ?<>
+        role === 'newLine' ? <>
           <p className="text-[12px]">This element would show on a new line</p>
           <textarea name="element" id="element" value={val} onChange={({ target }) => setVal(target.value)} className="border border-[#000] rounded-[5px] w-full h-[50px] p-1" /> </> : <>
           <p className="text-[12px]">This element would show inline</p>
           <input type='text' name="element" id="element" value={val} onChange={({ target }) => setVal(target.value)} className="border border-[#000] rounded-[5px] w-full h-[50px] p-1" /></>
       }
 
-      <GreenButton type="submit" className="w-[80px] h-[30px]">
+      <GreenButton type="submit" className="w-[80px] h-[28px] text-[16px]">
         Enter
       </GreenButton>
     </form>
+  )
+}
+
+const InsertImages = ({ setImage, close }: { setImage: (arg: { url: string, alt: string }) => void, close: () => void }) => {
+
+  const [imageDetails, setImageDetails] = useState({
+    url: '',
+    alt: ''
+  })
+  const [errors, setErrors] = useState({
+    url: '',
+    alt: ''
+  })
+
+
+
+  const onsubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!imageDetails.url) {
+      setErrors({
+        ...errors,
+        url: 'Image url is required'
+      })
+      return
+    }
+    setImage(imageDetails)
+    setImageDetails({
+      url: '',
+      alt: ''
+    })
+  }
+
+  return (
+    <div className="fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] w-[90vw] max-w-[400px] h-[300px]  border shadow-xl bg-white overflow-y-auto z-[400] flex items-center flex-col gap-2 justify-center items-center p-6">
+      <div className="flex justify-center p-2">
+        <button className="rounded-full block border w-[30px] h-[30px] absolute top-[3px] right-[8px] bg-white" role="close pop up" onClick={() => close()} >
+          x
+        </button>
+      </div>
+      <div>
+        You can upload an image or enter an image url
+      </div>
+      <ImageUploadButton fn={
+        (images, err) => {
+          console.log(images)
+          setImageDetails(Object.assign(imageDetails, {
+            ...imageDetails,
+            url: images[0].fileUrl,
+          }))
+          if (err) {
+            setErrors({
+              ...errors,
+              url: err
+            })
+          }
+        }
+      } />
+      {errors.url && <p className="text-red-500 text-[14px]">{errors.url}</p>}
+      <form onSubmit={onsubmit}>
+        <label htmlFor="url">Image url</label>
+        <input type="text" name="url" id="url" value={imageDetails.url} className="border border-[#000] rounded-[5px] w-full h-[30px] p-1" onChange={({ target }) => setImageDetails({ ...imageDetails, url: target.value })} required />
+        <label htmlFor="alt">Image alt</label>
+        <input type="text" name="alt" id="alt" value={imageDetails.alt} onChange={({ target }) => setImageDetails({ ...imageDetails, alt: target.value })} className="border border-[#000] rounded-[5px] w-full h-[30px] p-1" />
+        <GreenButton type="submit" className="w-[80px] h-[28px] my-4 text-[16px] ">
+          Enter
+        </GreenButton>
+      </form>
+    </div>
   )
 }

@@ -1,6 +1,7 @@
 
 
-const baseUrl = 'http://localhost:3000/api';
+const site = "https://vu-chatter.vercel.app/api";
+const baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000/api" : site;
 
 const mongodbErrorCodes: {
   [key: number]: string;

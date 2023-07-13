@@ -13,13 +13,13 @@ export async function GET(req: Request) {
   }
 }
 
-async function getBlog(userId:string) {
+async function getBlog(blogId:string) {
    try {
-     const res = await BlogPostModel.findById(userId);
+     const res = await BlogPostModel.findById(blogId);
      if (!res) {
        return NextResponse.json({
          error: true,
-         message: "Could not find blog with ID " + userId,
+         message: "Could not find blog with ID " + blogId,
          status: 200,
        });
      } else {
@@ -60,4 +60,34 @@ async function getAllBlogs() {
         err: err
       });
     }
+}
+
+
+export default async function POST(req: Request) {
+  const res = await req.json();
+  const { title, content, coverImage, author, state } = res;
+  const blog = new BlogPostModel({
+    title,
+    content,
+    coverImage,
+    author,
+    state
+  });
+  try {
+    const result = await blog.save();
+    return NextResponse.json({
+      status: 200,
+      error: false,
+      message: "Blog created successfully",
+      data: result,
+    });
+  }
+  catch (err) {
+    return NextResponse.json({
+      status: 500,
+      error: true,
+      message: "Internal Server Error",
+      err: err
+    });
+  }
 }
