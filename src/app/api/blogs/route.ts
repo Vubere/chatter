@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import BlogPostModel from "./schema";
+import UserModel from "../users/schema";
+import { ObjectId } from "mongodb";
 
 /* GET REQUEST */
 export async function GET(req: Request) {
@@ -65,15 +67,20 @@ async function getAllBlogs() {
 
 export async function POST(req: Request) {
   const res = await req.json();
-  const { title, content, coverImage, author, state } = res;
+  const { title, content, coverImage, author, state, excerpt, tags } = res;
   const blog = new BlogPostModel({
     title,
     content,
     coverImage,
     author,
-    state
+    state,
+    excerpt: excerpt || "",
+    tags: tags || [],
   });
   try {
+    await UserModel.findByIdAndUpdate(author, {
+      $push: { posts: blog._id },
+    });
     const result = await blog.save();
     return NextResponse.json({
       status: 200,

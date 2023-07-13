@@ -1,5 +1,6 @@
 
 /* custom components */
+import AuthRedirect from "../components/AuthRedirect"
 import Topbar from "../components/Dashboard/header"
 import Sidebar from "../components/Dashboard/sidebar"
 
@@ -15,6 +16,9 @@ export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div>
+        {
+          <AuthRedirect />
+        }
         <div>
           <Topbar />
         </div>

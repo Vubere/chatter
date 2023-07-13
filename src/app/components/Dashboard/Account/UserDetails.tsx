@@ -11,14 +11,13 @@ import { BlueButton } from "../../Buttons"
 
 /* assets */
 import edit from '@/icons/pencil.svg'
+import { User } from "@/types"
 
 
 
 
-export default function UserDetails() {
+export default function UserDetails({user}:{user:User}) {
 
-  const user = useAppSelector(state => state.user)
-  if (!user) return null
 
 
   return (

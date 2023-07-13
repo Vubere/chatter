@@ -8,6 +8,7 @@ interface IBlogPost extends Document {
   author: string;
   likes: number;
   comments: number;
+  excerpt: string;
   createdAt: Date;
   updatedAt: Date;
   views: number;
@@ -31,6 +32,10 @@ const blogPostSchema = new Schema<IBlogPost>({
   author: {
     type: String,
     required: true,
+  },
+  excerpt: {
+    type: String,
+    default: "",
   },
   likes: {
     type: Number,

@@ -1,23 +1,27 @@
 'use client';
 /* hooks */
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 
 
 
 export default function AuthRedirect() {
   const router = useRouter()
+  const pathname = usePathname()
+
 
 
   useEffect(() => {
-    if(typeof window === 'undefined') return
+    if (typeof window === 'undefined') return
     const token = localStorage.getItem('chatterUser')
     if (token) {
-      router.push('/dashboard')
+      if (!pathname.includes("/dashboard")) {
+        router.push('/dashboard')
+      }
     } else {
       router.push('/sign-in')
     }
-  }, [router])
+  }, [router, pathname])
 
   return null
 }

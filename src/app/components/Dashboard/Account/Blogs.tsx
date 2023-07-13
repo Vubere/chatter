@@ -7,7 +7,7 @@ import { Post } from "../feed";
 export default function Blogs({user}:{user: User}) {
   const {posts,likes, bookmarks} = user
   return (
-    <div>
+    <div> 
       
     </div>
   )
@@ -26,7 +26,7 @@ function BlogSection({blogs}:{blogs: string[]}) {
 
 function Blog({id}:{id: string}) {
 
-    
+  
 
   return (
     <>

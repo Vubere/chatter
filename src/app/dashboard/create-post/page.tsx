@@ -1,46 +1,36 @@
 'use client'
 /* hooks */
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/state/hooks";
 /* libray elements */
 import Image from 'next/image'
 import Markdown from "marked-react";
 /* custom elements */
 import { BlueButton, GreenButton } from "@/app/components/Buttons";
 import ImageUploadButton from "@/app/components/UploadImage";
+import Alert from "@/app/components/Alert";
 
 /* images */
 import add from "@/icons/add.svg";
 
 /* helpers */
 import { blogElements, blogElementsCat } from "./_helpers";
+import blogServices from "@/app/services/blogServices";
+import { set } from "mongoose";
 
 const {
   newLineElements,
   insertElements,
 } = blogElementsCat;
 
-const markdownText = `
-# Header
-This is a **bold** paragraph.
-![Image](https://randomuser.me/api/portraits/men/1.jpg)
-- List item 1
-- List item 2
-> Quote
-\`\`\`console.log("Code block");\`\`\`\n
-[Link](https://example.com)\n
----
-*Italic*\n
-## Header 2
-`;
-
-
-
-
 export default function CreatePost() {
+  const user = useAppSelector((state: any) => state.user)
+  const router = useRouter()
   const [currentType, setCurrentType] = useState<string>('header')
   const [text, setBlogText] = useState('')
   const [header, setBlogHeader] = useState('')
-
+  const [excerpt, setBlogExcerpt] = useState('')
   const [showElementPopup, setShowElementPopup] = useState(false)
   const [linkPopup, setLinkPopup] = useState(false)
   const [insert, setInsert] = useState<{
@@ -50,7 +40,15 @@ export default function CreatePost() {
   const [showInsertPopup, setShowInsertPopup] = useState(false)
   const [showImagePopup, setShowImagePopup] = useState(false)
   const [coverImageUrl, setCoverImageUrl] = useState('')
-
+  const editorRef = React.useRef<HTMLTextAreaElement>(null);
+  const [tags, setTags] = useState<string[]>([])
+  const [tag, setTag] = useState('')
+  const [alertObj, setAlert] = useState<{
+    type: 'success' | 'error' | 'warning' | 'info' | '',
+    message: string,
+    close: () => any
+  }>()
+  const [showAlert, setShowAlert] = useState(false)
 
 
   const handleSetNewLineEl = (type: string) => {
@@ -58,11 +56,7 @@ export default function CreatePost() {
     setShowElementPopup(false)
     setBlogText(prev => prev + '\n' + blogElements[type].mdElement)
   }
-  const handleSetInlineEl = (type: string) => {
-    setCurrentType(type)
-    setShowElementPopup(false)
-    setBlogText(prev => prev + ' ' + blogElements[type].mdElement)
-  }
+
   const handleInsertElement = (role: 'inLine' | 'newLine', type: string, text: string) => {
     const { generateMarkdown } = blogElementsCat.insertElements[type]
     setShowInsertPopup(false)
@@ -90,7 +84,7 @@ export default function CreatePost() {
       case 'quote': openInsertElement(type, 'newLine'); break;
       case 'bold': openInsertElement(type, 'inLine'); break;
       case 'italic': openInsertElement(type, 'inLine'); break;
-      case 'list': openInsertElement(type, 'inLine'); break;
+      case 'list item': openInsertElement(type, 'newLine'); break;
       default: break;
     }
 
@@ -129,71 +123,91 @@ export default function CreatePost() {
   }
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown: (e: KeyboardEvent) => void = (e) => {
       if (e.key === 'Enter') {
         if ((newLineElements[currentType] != undefined) && (currentType != 'header' && currentType != 'subHeading')) {
           handleSetNewLineEl(currentType)
         }
       }
     }
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
+    if (editorRef.current) {
+      const textArea = editorRef.current
+      textArea.addEventListener('keydown', onKeyDown)
+      return () => {
+        textArea.removeEventListener('keydown', onKeyDown)
+      }
     }
   }, [currentType])
 
-  const onBlogSubmmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const blog = {
+  const onBlogSubmmit = (type: 'published' | 'draft') => {
+
+    blogServices.postBlog({
       title: header,
-      imageCover: '',
+      coverImage: coverImageUrl,
       content: text,
-    }
+      excerpt: excerpt,
+      author: user?._id,
+      state: type,
+      tags
+    }).then(res => {
+      /* if (res.status == 'success') {
+        router.push(`/blog/${res.data.bl
+          }`)
+      } */
+      if(res.status == 'success'){
+        setShowAlert(true)
+        setAlert({
+          type: 'success',
+          message: 'Blog saved successfully',
+          close: () => {
+            setShowAlert(false)
+          }
+        })
+        setTimeout(() => {
+          setShowAlert(false)
+          setAlert(undefined)
+        }, 3000)
+        /* reset all */
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+
   }
 
-  const ci_alt = coverImageUrl ? 'cover image': ''
+  const ci_alt = coverImageUrl ? 'cover image' : ''
 
 
 
   return (
-    <main className="p-4 h-[100vh] overflow-y-auto">
+    <main className="p-4 h-[100vh] overflow-y-auto pb-40">
+      {showAlert&& alertObj && <Alert type={alertObj.type} message={alertObj.message} close={alertObj.close} />}
       <div className="flex justify-end gap-4">
-        <BlueButton>
+        <BlueButton onClick={() => onBlogSubmmit('draft')}>
           <span className="text-white">Save to Draft</span>
         </BlueButton>
-        <GreenButton>
+        <GreenButton onClick={() => onBlogSubmmit('published')}>
           <span className="text-white">Publish</span>
         </GreenButton>
       </div>
-      <div className="flex items-end py-10 flex-col ">
-        <p>
-          Add cover Image <span className="text-[#050]">*required</span>
-        </p>
-        <ImageUploadButton
-          fn={(images: any[], err?: string) => {
-            if (err) {
-              return alert(err)
-            }
-            setCoverImageUrl(images[0].fileUrl)
-          }}
-        />
-      </div>
+      
       <div className='flex mt-10'>
-        <div className="h-full w-[80px] pb-[10%] flex items-end">
+        <div className="h-full w-[80px]  flex items-end">
           <button className="rounded-full block border w-[40px] h-[40px] " role="add content" onClick={() => setShowElementPopup(prev => !prev)} >
             <Image src={add} alt="add" width={35} height={35} />
           </button>
+
         </div>
 
-        <div className="w-full h-[100vh] overflow-y-auto flex gap-[8%]">
-          <form onSubmit={onBlogSubmmit} className='w-[45%] h-[60vh] max-h-[700px] border p-2'>
+        <div className="w-full h-[70vh] overflow-y-auto flex gap-[2%] flex-wrap">
+          <div className='w-[90vh] max-w-[420px] h-[60vh] max-h-[700px] border p-2'>
             <input placeholder="Title" className="w-full h-[10%] min-h-[50px] max-h-[60px] p-3 border-none text-[34px] focus:outline-none"
               value={header} onChange={({ target }) => setBlogHeader(target.value)} />
-            <textarea className="w-full h-[85%] p-3 border-none focus:outline-none text-[22px] placeholder:text-[22px]" value={text} onChange={onChange} placeholder="Write a Post...." />
-          </form>
-          <div className='w-[45%] h-[60vh] border overflow-y-auto md p-8'>
+            <textarea ref={editorRef} className="w-full h-[85%] p-3 border-none focus:outline-none text-[22px] placeholder:text-[22px] resize-none" value={text} onChange={onChange} placeholder="Write a Post...." />
+          </div>
+          <div className='w-[90vh] max-w-[420px] h-[60vh] border overflow-y-auto md p-8'>
             <Markdown>
-              {'# ' + header +'\n'+'!['+ci_alt+']('+coverImageUrl+')' + '\n' + text}
+              {'# ' + header + '\n' + '![' + ci_alt + '](' + coverImageUrl + ')' + '\n' + text}
             </Markdown>
           </div>
         </div>
@@ -239,6 +253,46 @@ export default function CreatePost() {
         showInsertPopup && <InsertElement role={insert.role} element={insert.type} onElementSubmit={handleInsertElement} close={() => { setShowInsertPopup(false) }} />
       }
       {showImagePopup && <InsertImages setImage={onImageSubmit} close={() => { setShowImagePopup(false) }} />}
+      <div className="flex gap-2 flex-wrap justify-center">
+        <div className="w-full bg-red flex flex-col gap-2 w-[90vh] max-w-[250px]">
+          <h4>Tags:</h4>
+          <div className="flex gap-2">
+            <input type="text" className="border w-[120px] h-[36px] p-1 focus:outline-none" value={tag} onChange={({ target }) => setTag(target.value)} />
+            <GreenButton onClick={() => {
+              setTags([...tags, tag])
+              setTag('')
+            }} className="h-[36px] w-[60px] p-1">Add</GreenButton>
+          </div>
+          <ul className="flex gap-2 ">
+            {tags.map((tag, i) => (
+              <li key={i} className="border p-2 rounded-full min-w-[28px] flex gap-2 align-center">
+                <span >
+                  {tag}
+                </span>
+                <button onClick={() => setTags(tags.filter((_, index) => index !== i))} className="w-[22px] h-[22px] rounded-full border text-white  bg-black text-center ">x</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex items-end  flex-col w-[90vh] max-w-[350px]">
+          <p>
+            Add cover Image <span className="text-[#a00]">*required</span>
+          </p>
+          <ImageUploadButton
+            fn={(images: any[], err?: string) => {
+              if (err) {
+                return alert(err)
+              }
+              setCoverImageUrl(images[0].fileUrl)
+            }}
+          />
+          <div>
+            <label htmlFor="except">Except <span className='resize-none text-[#008] text-[12px] w-full '>* optional</span></label>
+            <textarea value={excerpt} onChange={({ target }) => setBlogExcerpt(target.value)} name="except" id="except" className="w-full max-w-[450px] h-[100px] min-h-[50px] max-h-[60px] p-3 border text-[14px] focus:outline-none resize-none" />
+          </div>
+        </div>
+      </div>
+
     </main>
   )
 }
@@ -280,7 +334,7 @@ const LinkPopup = ({ onLinkSubmit, close }: { onLinkSubmit: (url: string, text: 
 
         <label htmlFor="text">Link text: </label>
         <input type="text" className="border border-[#000] w-full p-1 h-[30px]" value={linkText} onChange={({ target }) => setLinkText(target.value)} />
-        <BlueButton className="h-[30px] w-[70px]" type="submit">
+        <BlueButton className="h-[30px] w-[70px] p-1" type="submit">
           Enter
         </BlueButton>
       </form>
@@ -301,7 +355,7 @@ const InsertElement = ({ role, element, onElementSubmit, close }: {
     onElementSubmit(role, element, val)
   }
   return (
-    <form onSubmit={onSubmit} className="fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] w-[90vw] max-w-[400px] h-[120px] p-2  border shadow-xl bg-white overflow-y-auto z-[400] flex items-center flex-col gap-2 justify-center items-center">
+    <form onSubmit={onSubmit} className="fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] w-[90vw] max-w-[400px] h-[160px] p-2  border shadow-xl bg-white overflow-y-auto z-[400] flex items-center flex-col gap-2 justify-center items-center">
       <button className="rounded-full block border w-[30px] h-[30px] absolute top-[3px] right-[8px] bg-white" role="close pop up" onClick={() => close()} >
         x
       </button>
@@ -309,12 +363,12 @@ const InsertElement = ({ role, element, onElementSubmit, close }: {
       {
         role === 'newLine' ? <>
           <p className="text-[12px]">This element would show on a new line</p>
-          <textarea name="element" id="element" value={val} onChange={({ target }) => setVal(target.value)} className="border border-[#000] rounded-[5px] w-full h-[50px] p-1" /> </> : <>
+          <textarea name="element" id="element" value={val} onChange={({ target }) => setVal(target.value)} className="border border-[#000] rounded-[5px] w-full min-h-[50px] p-1 resize-none" /> </> : <>
           <p className="text-[12px]">This element would show inline</p>
           <input type='text' name="element" id="element" value={val} onChange={({ target }) => setVal(target.value)} className="border border-[#000] rounded-[5px] w-full h-[50px] p-1" /></>
       }
 
-      <GreenButton type="submit" className="w-[80px] h-[28px] text-[16px]">
+      <GreenButton type="submit" className="w-[80px] h-[28px] text-[16px] p-1">
         Enter
       </GreenButton>
     </form>
@@ -381,7 +435,7 @@ const InsertImages = ({ setImage, close }: { setImage: (arg: { url: string, alt:
         <input type="text" name="url" id="url" value={imageDetails.url} className="border border-[#000] rounded-[5px] w-full h-[30px] p-1" onChange={({ target }) => setImageDetails({ ...imageDetails, url: target.value })} required />
         <label htmlFor="alt">Image alt</label>
         <input type="text" name="alt" id="alt" value={imageDetails.alt} onChange={({ target }) => setImageDetails({ ...imageDetails, alt: target.value })} className="border border-[#000] rounded-[5px] w-full h-[30px] p-1" />
-        <GreenButton type="submit" className="w-[80px] h-[28px] my-4 text-[16px] ">
+        <GreenButton type="submit" className="w-[80px] h-[28px] my-4 text-[16px] p-1">
           Enter
         </GreenButton>
       </form>

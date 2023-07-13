@@ -1,3 +1,4 @@
+import AuthRedirect from "../components/AuthRedirect"
 
 
 
@@ -11,6 +12,9 @@ export const metadata = {
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {
+        <AuthRedirect/>
+      }
       {children}
     </>
   )
