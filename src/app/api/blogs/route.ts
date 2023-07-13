@@ -63,7 +63,7 @@ async function getAllBlogs() {
 }
 
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
   const res = await req.json();
   const { title, content, coverImage, author, state } = res;
   const blog = new BlogPostModel({

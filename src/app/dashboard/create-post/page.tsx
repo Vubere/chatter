@@ -129,7 +129,6 @@ export default function CreatePost() {
   }
 
   useEffect(() => {
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         if ((newLineElements[currentType] != undefined) && (currentType != 'header' && currentType != 'subHeading')) {
@@ -152,7 +151,7 @@ export default function CreatePost() {
     }
   }
 
-  const ci_alt = coverImageUrl ? 'cover image':''
+  const ci_alt = coverImageUrl ? 'cover image': ''
 
 
 
