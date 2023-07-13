@@ -21,3 +21,62 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-track {
   display:none;
 }
+
+
+.md h1{
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+.md h2{
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.md li{
+  font-size: 1.2rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  font-weight: 500;
+  list-style-type: disc;
+}
+.md ol li{
+  list-style-type: decimal;
+}
+.md p {
+  font-size: 1.2rem;
+  max-width: 100%;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.md a{
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: blue;
+}
+
+.md a:hover{
+  color: #000;
+  text-decoration: underline;
+}
+
+.md ul{
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.md image{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}

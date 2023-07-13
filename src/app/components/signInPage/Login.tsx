@@ -17,7 +17,6 @@ import linkedInIcon from '@/icons/linkedIn.svg'
 
 /* services */
 import userServices from '@/app/services/userServices';
-import errorServices from '@/app/services/errorServices';
 import { encrypt } from '@/app/services/encyptionServices';
 
 /* rtk */
