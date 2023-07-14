@@ -1,6 +1,9 @@
+'use client'
 /* next components */
 import Link from 'next/link'
 import Image from 'next/image'
+/* hooks */
+import { usePathname } from 'next/navigation'
 
 /* icons  */
 import account from '@/icons/dashboard/account.png'
@@ -40,7 +43,7 @@ const overviewLinks = [
     title: 'Drafts',
     icon: draft,
     iconActive: draftActive,
-    link: ''
+    link: '/dashboard/drafts'
   },
   {
     title: 'Analytics',
@@ -65,6 +68,7 @@ const personalLinks = [
 ]
 
 export default function Sidebar() {
+  const path = usePathname()
 
   const trendingTags = ['programming', 'data science', 'technology', 'machine learning', 'politics']
 
@@ -80,8 +84,8 @@ export default function Sidebar() {
           <ul className='flex flex-col gap-4 pl-4'>
             {overviewLinks.map((link, i) => (
               <li key={i}>
-                <Link href={link.link} className='flex gap-2'>
-                  <Image src={link.icon} alt={link.title} className='w-[10px] h-[10px]' /> {link.title}
+                <Link href={link.link} className={`flex gap-2 items-center ${path == link.link ? 'text-[#543ee0]' : ''}`}>
+                  <Image src={path == link.link ? link.iconActive : link.icon} alt={link.title} className='w-[14px] h-[14px]' /> {link.title}
                 </Link>
               </li>
             )
@@ -108,8 +112,8 @@ export default function Sidebar() {
           <ul className='flex gap-4 flex-col pl-4'>
             {personalLinks.map((link, i) => (
               <li key={i}>
-                <Link href={link.link} className='flex gap-2'>
-                  <Image src={link.icon} alt={link.title} /> {link.title}
+                <Link href={link.link} className={`flex gap-2 items-center ${path == link.link ? 'text-[#543ee0]' : ''}`}>
+                  <Image src={path == link.link ? link.iconActive : link.icon} alt={link.title} className='w-[14px] h-[14px]' /> {link.title}
                 </Link>
               </li>
             ))

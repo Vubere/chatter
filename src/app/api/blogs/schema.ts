@@ -12,8 +12,10 @@ interface IBlogPost extends Document {
   createdAt: Date;
   updatedAt: Date;
   views: number;
+  minRead: number;
   tags: string[];
   state: 'Published'|'Draft';
+  bookmarks: number;
 }
 
 const blogPostSchema = new Schema<IBlogPost>({
@@ -64,7 +66,15 @@ const blogPostSchema = new Schema<IBlogPost>({
   state: {
     type: String,
     default: 'Draft'
-  }
+  },
+  minRead: {
+    type: Number,
+    default: 0,
+  },
+  bookmarks: {
+    type: Number,
+    default: 0,
+  },
 });
 function bgModel(){
   return db.models.blogs||db.model<IBlogPost>("blogs", blogPostSchema);

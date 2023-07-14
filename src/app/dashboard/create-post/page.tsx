@@ -261,7 +261,7 @@ export default function CreatePost() {
             <GreenButton onClick={() => {
               setTags([...tags, tag])
               setTag('')
-            }} className="h-[36px] w-[60px] p-1">Add</GreenButton>
+            }} className="max-h-[36px] w-[60px] p-1">Add</GreenButton>
           </div>
           <ul className="flex gap-2 ">
             {tags.map((tag, i) => (
