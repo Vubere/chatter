@@ -5,7 +5,7 @@ import { BlueButton } from "@/app/components/Buttons"
 import { Post } from "@/app/components/Dashboard/feed"
 import FloatingButton from "@/app/components/PostContentFloatingButton"
 import { useAppSelector } from "@/state/hooks"
-import { feed } from "@/types"
+import { feedT as feed } from "@/types"
 import { useState } from "react"
 
 

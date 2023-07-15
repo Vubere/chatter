@@ -1,7 +1,7 @@
 'use client'
 import { Post } from "@/app/components/Dashboard/feed"
 import { useAppSelector } from "@/state/hooks"
-import { feed } from "@/types"
+import { feedT as feed } from "@/types"
 import { useRouter } from "next/navigation"
 import { comma } from "postcss/lib/list"
 import { useEffect, useState } from "react"

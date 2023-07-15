@@ -15,7 +15,7 @@ import view from '@/icons/views.svg'
 import bookmark from '@/icons/dashboard/bm.png'
 
 /* types */
-import { feed } from '@/types'
+import { feedT } from '@/types'
 
 /* fakedata */
 import Avatar from '../Avatar'
@@ -68,7 +68,7 @@ function FeedHeading({currentView, setCurrentView}: {
 
 
 interface feedContentProp {
-  feed: feed[]
+  feed: feedT[]
 }
 
 
@@ -87,7 +87,7 @@ function FeedContent({ feed }: feedContentProp) {
     </>
   )
 }
-function Post({ feed }: { feed: feed }) {
+function Post({ feed }: { feed: feedT }) {
   const formalCreatedAt = new Date(feed.createdAt)
   const created = format(formalCreatedAt, 'MMM dd, yyyy')
   return (

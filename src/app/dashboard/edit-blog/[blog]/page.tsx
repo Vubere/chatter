@@ -1,6 +1,6 @@
 'use client'
 
-import { feed } from "@/types"
+import { feedT as feed } from "@/types"
 import { useEffect, useState } from "react"
 
 

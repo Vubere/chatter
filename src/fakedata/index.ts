@@ -1,8 +1,8 @@
-import { feed, User } from "@/types";
+/* import { feedT, User } from "@/types";
 
 
 
-const fakeFeed:feed[] = [
+const fakeFeed:feedT[] = [
   {
     id: "1",
     title: "The 5 best ways to improve your writing",
@@ -350,4 +350,4 @@ const fakeUser:User = {
 
 
 
-export {fakeFeed,fakeUser}
+export {fakeFeed,fakeUser} */

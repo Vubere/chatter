@@ -18,7 +18,7 @@ import add from "@/icons/add.svg";
 import { blogElements, blogElementsCat } from "./_helpers";
 import blogServices from "@/app/services/blogServices";
 import { set } from "mongoose";
-import { feed } from "@/types";
+import {  feedT as feed } from "@/types";
 
 const {
   newLineElements,

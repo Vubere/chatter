@@ -22,7 +22,7 @@ type feed = {
   tags: string[];
   bookmarks: number;
 }
-
+export type feedT = feed & { _id: string };
 
 type User = {
   firstName: string;

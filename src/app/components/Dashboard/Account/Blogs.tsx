@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 
-import { User, feed } from "@/types";
+import { User, feedT as feed } from "@/types";
 import { Post } from "../feed";
 
 
