@@ -35,11 +35,11 @@ type User = {
   bio: string;
   followers: number[];
   following: number[];
-  bookmarks: number[];
-  posts: number[];
+  bookmarks: string[];
+  posts: string[];
   profession: string;
-  likes: number[];
-  comments: number[];
+  likes: string[];
+  comments: string[];
   profileViews: number;
   createdAt: Date;
   updatedAt: Date;

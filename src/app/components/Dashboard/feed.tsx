@@ -92,16 +92,7 @@ function Post({ feed }: { feed: feed }) {
   const created = format(formalCreatedAt, 'MMM dd, yyyy')
   return (
     <article className='max-w-[800px] w-[90%]'>
-      {
-        feed.state.toLowerCase() == 'draft' ?
-          <div className=' h-[30px] w-full'>
-            <div className='flex justify-end gap-2'>
-              <Link href={`/dashboard/edit-blog/${feed._id}`}>
-                <BlueButton className='bg-[#543ee0] text-[#fff] px-2 py-1  rounded-[4px]'>Edit Draft</BlueButton>
-              </Link>
-            </div>
-          </div> : null
-      }
+      
       <header className='flex gap-2 mb-2'>
         <div className='w-[96px] h-[96px] relative border rounded-full'>
           <Avatar src={feed.author.avatar} className='' alt={feed.author.firstName} fill={true} />

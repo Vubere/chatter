@@ -1,4 +1,4 @@
-
+'use client'
 
 /* custom compnents  */
 import { BlueButton } from "@/app/components/Buttons"

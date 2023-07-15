@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation"
 import { comma } from "postcss/lib/list"
 import { useEffect, useState } from "react"
 
+import Link from 'next/link'
+
+import {BlueButton} from "@/app/components/Buttons"
+
 
 export default function DraftsPage() {
   const user = useAppSelector(state => state.user)
@@ -38,6 +42,16 @@ export default function DraftsPage() {
         {drafts.length === 0 ? loading ? <p>Loading...</p> : <p className="text-[#626262] text-[18px] leading-[27px] pt-8">No drafts available</p> : null}
         {drafts.map(draft => (
           <div key={draft._id} className="w-full border p-2 rounded-[5px]">
+            {
+              draft.state.toLowerCase() == 'draft' ?
+                <div className=' h-[30px] w-full'>
+                  <div className='flex justify-end gap-2'>
+                    <Link href={`/dashboard/edit-blog/${draft._id}`}>
+                      <BlueButton className='bg-[#543ee0] text-[#fff] px-2 py-1  rounded-[4px]'>Edit Draft</BlueButton>
+                    </Link>
+                  </div>
+                </div> : null
+            }
             <Post feed={draft} />
           </div>
         ))}
