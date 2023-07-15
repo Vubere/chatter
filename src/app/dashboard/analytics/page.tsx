@@ -4,14 +4,19 @@
 import { BlueButton } from "@/app/components/Buttons"
 import { Post } from "@/app/components/Dashboard/feed"
 import FloatingButton from "@/app/components/PostContentFloatingButton"
-import { fakeFeed, fakeUser } from "@/fakedata"
+import { useAppSelector } from "@/state/hooks"
+import { feed } from "@/types"
+import { useState } from "react"
 
 
 
 export default function Analytics() {
-
-  const post = fakeFeed[0]
-  const totalImpressions = fakeFeed.reduce((acc, curr) => acc + curr.views, 0)
+  const [post, setPost] = useState<feed>()
+  const user = useAppSelector(state => state.user)
+  const feed:any[] = []
+  const totalImpressions = feed.reduce((acc, curr) => acc + curr.views, 0)
+  if(!post) return null
+  
 
   return (
     <>
@@ -36,9 +41,9 @@ export default function Analytics() {
           <h4 className="text-[24px] font-[600] text-[#111]">Posts summary</h4>
         </div>
         <ul className="flex justify-around ">
-          <li className="text-[#111] text-[22px]  flex flex-col items-center">Posts <span className="text-[24px] text-[#111] font-[600]">{fakeFeed.length}</span></li>
+          <li className="text-[#111] text-[22px]  flex flex-col items-center">Posts <span className="text-[24px] text-[#111] font-[600]">{user?.posts.length}</span></li>
           <li className="text-[#111] text-[22px]  flex flex-col items-center">Posts impressions <span className="text-[24px] text-[#111] font-[600]">{totalImpressions}</span></li>
-          <li className="text-[#111] text-[22px]  flex flex-col items-center">Profile visits <span className="text-[24px] text-[#111] font-[600]">{fakeUser.profileViews}</span></li>
+          <li className="text-[#111] text-[22px]  flex flex-col items-center">Profile visits <span className="text-[24px] text-[#111] font-[600]">{user?.posts.length}</span></li>
         </ul>
       </main >
       <FloatingButton/>

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import BlogPostModel from "@/app/api/blogs/schema";
 import UserModel from "../../schema";
 
-export default async function GET(
+export async function GET(
   req: Request,
   { params }: { params: { user: string; limit: number; offset: number } }
 ) {
