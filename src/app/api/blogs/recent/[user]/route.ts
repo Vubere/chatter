@@ -17,7 +17,7 @@ export async function GET(req:Request,{params}:{params:{user:string}}) {
   const offset = searchParams.get('offset')
   const {user} = params
 
-  const blogs = await BlogPostModel.find().limit(limit)
+  const blogs = await BlogPostModel.find({state:'published'}).limit(limit)
 
   return NextResponse.json({
     status: 200,

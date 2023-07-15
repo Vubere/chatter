@@ -3,6 +3,7 @@
 import AuthRedirect from "../components/AuthRedirect"
 import Topbar from "../components/Dashboard/header"
 import Sidebar from "../components/Dashboard/sidebar"
+import FloatingButton from "../components/PostContentFloatingButton"
 
 
 
@@ -29,6 +30,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
+      
     </>
   )
 }

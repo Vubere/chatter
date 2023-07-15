@@ -2,7 +2,7 @@
 
 import { feed } from "@/types"
 import { useEffect, useState } from "react"
-import CreatePost from "../../create-post/page"
+import CreatePost from "../../create-blog/page"
 
 export default function BlogToEdit({params}:{params:{blog:string}}) {
   const [blog, setBlog] = useState<feed>()

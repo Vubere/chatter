@@ -37,7 +37,7 @@ const overviewLinks = [
     title: 'Bookmarks',
     icon: bm,
     iconActive: bmActive,
-    link: ''
+    link: '/dashboard/bookmarks'
   },
   {
     title: 'Drafts',
@@ -63,7 +63,7 @@ const personalLinks = [
     title: 'Notifications',
     icon: notif,
     iconActive: notifActive,
-    link: ''
+    link: '/dashboard/account'
   }
 ]
 

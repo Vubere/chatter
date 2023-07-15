@@ -1,3 +1,4 @@
+import FloatingButton from "@/app/components/PostContentFloatingButton"
 
 
 
@@ -14,6 +15,7 @@ export default function DraftsLayout({children}:{children:React.ReactNode}) {
   return (
     <>
       {children}
+      <FloatingButton/>
     </>
   )
 }
