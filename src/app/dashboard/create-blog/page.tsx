@@ -25,7 +25,12 @@ const {
   insertElements,
 } = blogElementsCat;
 
-export default function CreatePost({ blog }: { blog?: feed }) {
+export default function CreatePostPage() {
+  return (
+    <CreatePost />
+  )
+}
+export function CreatePost({ blog }: { blog?: feed }) {
   const user = useAppSelector((state: any) => state.user)
   const router = useRouter()
   const [currentType, setCurrentType] = useState<string>('')

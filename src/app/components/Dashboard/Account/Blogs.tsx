@@ -18,7 +18,7 @@ export default function Blogs({ user }: { user: User }) {
   }
   const show = holder[type]
   return (
-    <div className="w-full max-h-[100vh] overflow-y-auto pb-[150px]">
+    <div className="w-full h-[100vh] overflow-auto pb-[150px]">
       <ul className="flex justify-between">
         <li onClick={() => setType('posts')} className={`${type == 'posts' ? 'border-b-[3px] border-[#543ee0]' : ''} w-[30%] text-center text-[18px] pb-4`}>Posts</li>
         <li onClick={() => setType('likes')} className={`${type == 'likes' ? 'border-b-[3px] border-[#543ee0]' : ''} w-[30%] text-center text-[18px] pb-4`}>Likes</li>
