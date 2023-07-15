@@ -18,19 +18,20 @@ import add from "@/icons/add.svg";
 import { blogElements, blogElementsCat } from "./_helpers";
 import blogServices from "@/app/services/blogServices";
 import { set } from "mongoose";
+import { feed } from "@/types";
 
 const {
   newLineElements,
   insertElements,
 } = blogElementsCat;
 
-export default function CreatePost() {
+export default function CreatePost({ blog }: { blog?: feed }) {
   const user = useAppSelector((state: any) => state.user)
   const router = useRouter()
-  const [currentType, setCurrentType] = useState<string>('header')
-  const [text, setBlogText] = useState('')
-  const [header, setBlogHeader] = useState('')
-  const [excerpt, setBlogExcerpt] = useState('')
+  const [currentType, setCurrentType] = useState<string>('')
+  const [text, setBlogText] = useState(blog?.content || '')
+  const [header, setBlogHeader] = useState(blog?.title || '')
+  const [excerpt, setBlogExcerpt] = useState(blog?.excerpt || '')
   const [showElementPopup, setShowElementPopup] = useState(false)
   const [linkPopup, setLinkPopup] = useState(false)
   const [insert, setInsert] = useState<{
@@ -41,7 +42,7 @@ export default function CreatePost() {
   const [showImagePopup, setShowImagePopup] = useState(false)
   const [coverImageUrl, setCoverImageUrl] = useState('')
   const editorRef = React.useRef<HTMLTextAreaElement>(null);
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>(blog?.tags || [])
   const [tag, setTag] = useState('')
   const [alertObj, setAlert] = useState<{
     type: 'success' | 'error' | 'warning' | 'info' | '',
@@ -140,39 +141,67 @@ export default function CreatePost() {
   }, [currentType])
 
   const onBlogSubmmit = (type: 'published' | 'draft') => {
-
-    blogServices.postBlog({
-      title: header,
-      coverImage: coverImageUrl,
-      content: text,
-      excerpt: excerpt,
-      author: user?._id,
-      state: type,
-      tags
-    }).then(res => {
-      /* if (res.status == 'success') {
-        router.push(`/blog/${res.data.bl
-          }`)
-      } */
-      if(res.status == 'success'){
-        setShowAlert(true)
-        setAlert({
-          type: 'success',
-          message: 'Blog saved successfully',
-          close: () => {
+    if (blog == undefined) {
+      blogServices.postBlog({
+        title: header,
+        coverImage: coverImageUrl,
+        content: text,
+        excerpt: excerpt,
+        author: user?._id,
+        state: type,
+        tags
+      }).then(res => {
+        /* if (res.status == 'success') {
+          router.push(`/blog/${res.data.bl
+            }`)
+        } */
+        if (res.status == 'success') {
+          setShowAlert(true)
+          setAlert({
+            type: 'success',
+            message: 'Blog saved successfully',
+            close: () => {
+              setShowAlert(false)
+            }
+          })
+          setTimeout(() => {
             setShowAlert(false)
+            setAlert(undefined)
+          }, 3000)
+          /* reset all */
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    } else {
+      blogServices.updateBlog(blog._id, {
+        title: header,
+        coverImage: coverImageUrl,
+        content: text,
+        excerpt: excerpt,
+        state: type,
+        tags
+      })
+        .then(res => {
+          if (res.status == 'success') {
+            setShowAlert(true)
+            setAlert({
+              type: 'success',
+              message: 'Blog saved successfully',
+              close: () => {
+                setShowAlert(false)
+              }
+            })
+            setTimeout(() => {
+              setShowAlert(false)
+              setAlert(undefined)
+            }, 3000)
+            /* reset all */
           }
+        }).catch(err => {
+          console.log(err)
         })
-        setTimeout(() => {
-          setShowAlert(false)
-          setAlert(undefined)
-        }, 3000)
-        /* reset all */
-      }
-    }).catch(err => {
-      console.log(err)
-    })
-
+    }
   }
 
   const ci_alt = coverImageUrl ? 'cover image' : ''
@@ -181,7 +210,7 @@ export default function CreatePost() {
 
   return (
     <main className="p-4 h-[100vh] overflow-y-auto pb-40">
-      {showAlert&& alertObj && <Alert type={alertObj.type} message={alertObj.message} close={alertObj.close} />}
+      {showAlert && alertObj && <Alert type={alertObj.type} message={alertObj.message} close={alertObj.close} />}
       <div className="flex justify-end gap-4">
         <BlueButton onClick={() => onBlogSubmmit('draft')}>
           <span className="text-white">Save to Draft</span>
@@ -190,7 +219,7 @@ export default function CreatePost() {
           <span className="text-white">Publish</span>
         </GreenButton>
       </div>
-      
+
       <div className='flex mt-10'>
         <div className="h-full w-[80px]  flex items-end">
           <button className="rounded-full block border w-[40px] h-[40px] " role="add content" onClick={() => setShowElementPopup(prev => !prev)} >

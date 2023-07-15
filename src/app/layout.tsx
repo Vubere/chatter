@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={bodyClass}>
         <Providers>
-          {children}
+            {children}
         </Providers>
       </body>
     </html>

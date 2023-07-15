@@ -41,4 +41,21 @@ export default class BlogServices {
         });
         return await res.json();
     }
+    static async updateBlog(id:string, blog:{
+        title: string,
+        content: string,
+        coverImage: string,
+        excerpt: string,
+        state: string,
+        tags: string[],
+    }){
+        const res = await fetch("/api/blogs?id="+id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(blog),
+        });
+        return await res.json();
+    }
 }

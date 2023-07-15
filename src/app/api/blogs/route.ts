@@ -76,6 +76,7 @@ export async function POST(req: Request) {
     state,
     excerpt: excerpt || "",
     tags: tags || [],
+    minRead: Math.ceil(content.split(" ").length / 200),
   });
   try {
     await UserModel.findByIdAndUpdate(author, {

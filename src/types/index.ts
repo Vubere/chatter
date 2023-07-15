@@ -2,7 +2,7 @@
 
 
 type feed = {
-  id: string;
+  _id: string;
   title: string;
   author: {
     firstName: string;
@@ -11,19 +11,22 @@ type feed = {
     avatar: string;
     profession: string;
   };
-  date: string;
-  content: any[];
+  createdAt: string;
+  content: string;
   likes: number;
-  synopsis: string;
-  displayImage: string;
+  excerpt: string;
+  coverImage: string;
   comments: number;
   views: number;
+  state: "Published" | "Draft";
   minRead: number;
   tags: string[];
+  bookmarks: number;
 }
 
 
 type User = {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
