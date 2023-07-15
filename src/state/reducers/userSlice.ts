@@ -5,8 +5,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 /* types */
 import { User } from "@/types";
-
-let initialState: User | null = null;
+type UserT = User & { _id: string };
+let initialState: UserT | null = null;
 
 if (typeof window !== "undefined") {
   initialState = localStorage.getItem("chatterUser")
@@ -18,7 +18,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<UserT>) => {
       return action.payload;
     },
     removeUser: () => {

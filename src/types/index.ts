@@ -2,7 +2,6 @@
 
 
 type feed = {
-  _id: string;
   title: string;
   author: {
     firstName: string;
@@ -26,7 +25,6 @@ type feed = {
 
 
 type User = {
-  _id: string;
   firstName: string;
   lastName: string;
   email: string;

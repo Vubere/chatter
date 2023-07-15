@@ -10,6 +10,8 @@ import Link from 'next/link'
 
 import {BlueButton} from "@/app/components/Buttons"
 
+type draftsType = feed & { _id: string}
+
 
 export default function DraftsPage() {
   const user = useAppSelector(state => state.user)
@@ -18,7 +20,7 @@ export default function DraftsPage() {
 
   if (!user && typeof window != 'undefined') router.push('/login')
 
-  const [drafts, setDrafts] = useState<feed[]>([])
+  const [drafts, setDrafts] = useState<draftsType[]>([])
 
 
   useEffect(() => {
