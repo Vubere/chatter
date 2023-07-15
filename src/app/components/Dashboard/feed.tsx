@@ -103,7 +103,7 @@ function Post({ feed }: { feed: feed }) {
           </div> : null
       }
       <header className='flex gap-2 mb-2'>
-        <div className='w-[96px] h-[96px] relative'>
+        <div className='w-[96px] h-[96px] relative border rounded-full'>
           <Avatar src={feed.author.avatar} className='' alt={feed.author.firstName} fill={true} />
         </div>
         <div className='flex justify-center  h-[96px] flex-col gap-1 w-full'>

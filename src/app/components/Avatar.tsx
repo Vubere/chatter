@@ -9,7 +9,7 @@ type AvatarProps = {
 }
 
 
-export default function Avatar({ src, className = '', alt = '', fill=true}: AvatarProps) {
+export default function Avatar({ src, className = '  ', alt = '', fill=true}: AvatarProps) {
 
 
   return (

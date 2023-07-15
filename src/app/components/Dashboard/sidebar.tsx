@@ -63,7 +63,7 @@ const personalLinks = [
     title: 'Notifications',
     icon: notif,
     iconActive: notifActive,
-    link: '/dashboard/account'
+    link: '/dashboard/notifications'
   }
 ]
 

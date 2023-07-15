@@ -49,12 +49,12 @@ export default class BlogServices {
         state: string,
         tags: string[],
     }){
-        const res = await fetch("/api/blogs?id="+id, {
-            method: "PUT",
+        const res = await fetch("/api/blogs", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(blog),
+            body: JSON.stringify({...blog, id, method:"PUT"}),
         });
         return await res.json();
     }

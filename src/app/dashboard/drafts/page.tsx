@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 export default function DraftsPage() {
   const user = useAppSelector(state => state.user)
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
   if (!user && typeof window != 'undefined') router.push('/login')
 
@@ -21,19 +22,24 @@ export default function DraftsPage() {
     fetch('/api/blogs/drafts?user_id=' + user._id)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
-        if (!data.error)
+        if (!data.error) {
+          setLoading(false)
           setDrafts(data.blogs)
-      }).catch(err=>console.log(err))
+        } else {
+          throw new Error(data)
+        }
+      }).catch(err => console.log(err))
   }, [user])
 
   return (
-    <main className="p-4 h-[100vh] overflow-y-auto pb-29 ">
+    <main className="p-4 max-h-[100vh] overflow-y-auto pb-[150px]">
       <h1 className="font-[700] text-[28px] text-[#626262]">Drafts</h1>
-      <div className=" flex flex-col items-center">
-        {drafts.length === 0 ? <p className="text-[#626262] text-[18px] leading-[27px] pt-8">No drafts available</p> : null}
+      <div className=" flex flex-col items-center ">
+        {drafts.length === 0 ? loading ? <p>Loading...</p> : <p className="text-[#626262] text-[18px] leading-[27px] pt-8">No drafts available</p> : null}
         {drafts.map(draft => (
-          <Post key={draft._id} feed={draft} />
+          <div key={draft._id} className="w-full border p-2 rounded-[5px]">
+            <Post feed={draft} />
+          </div>
         ))}
       </div>
     </main>

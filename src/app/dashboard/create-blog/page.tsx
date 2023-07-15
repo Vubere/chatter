@@ -40,7 +40,7 @@ export default function CreatePost({ blog }: { blog?: feed }) {
   }>({ type: 'newLine', role: 'newLine' })
   const [showInsertPopup, setShowInsertPopup] = useState(false)
   const [showImagePopup, setShowImagePopup] = useState(false)
-  const [coverImageUrl, setCoverImageUrl] = useState('')
+  const [coverImageUrl, setCoverImageUrl] = useState(blog?.coverImage||'')
   const editorRef = React.useRef<HTMLTextAreaElement>(null);
   const [tags, setTags] = useState<string[]>(blog?.tags || [])
   const [tag, setTag] = useState('')
@@ -183,11 +183,11 @@ export default function CreatePost({ blog }: { blog?: feed }) {
         tags
       })
         .then(res => {
-          if (res.status == 'success') {
+          if (!res.error) {
             setShowAlert(true)
             setAlert({
               type: 'success',
-              message: 'Blog saved successfully',
+              message: 'Blog Updated successfully',
               close: () => {
                 setShowAlert(false)
               }
@@ -228,13 +228,13 @@ export default function CreatePost({ blog }: { blog?: feed }) {
 
         </div>
 
-        <div className="w-full h-[70vh] overflow-y-auto flex gap-[2%] flex-wrap">
-          <div className='w-[90vh] max-w-[420px] h-[60vh] max-h-[700px] border p-2'>
+        <div className="w-full min-h-[70vh] overflow-y-auto flex gap-[2%] flex-wrap">
+          <div className='w-[45%] min-w-[300px] h-[60vh] max-h-[700px] border p-2'>
             <input placeholder="Title" className="w-full h-[10%] min-h-[50px] max-h-[60px] p-3 border-none text-[34px] focus:outline-none"
               value={header} onChange={({ target }) => setBlogHeader(target.value)} />
             <textarea ref={editorRef} className="w-full h-[85%] p-3 border-none focus:outline-none text-[22px] placeholder:text-[22px] resize-none" value={text} onChange={onChange} placeholder="Write a Post...." />
           </div>
-          <div className='w-[90vh] max-w-[420px] h-[60vh] border overflow-y-auto md p-8'>
+          <div className='w-[45%] min-w-[300px] h-[60vh] border overflow-y-auto md p-8'>
             <Markdown>
               {'# ' + header + '\n' + '![' + ci_alt + '](' + coverImageUrl + ')' + '\n' + text}
             </Markdown>
@@ -303,9 +303,13 @@ export default function CreatePost({ blog }: { blog?: feed }) {
             ))}
           </ul>
         </div>
-        <div className="flex items-end  flex-col w-[90vh] max-w-[350px]">
+        <div className="flex gap-2 items-end  flex-col w-[90vh] max-w-[350px]">
+          <div className="mb-4">
+            <label htmlFor="except">Except <span className='resize-none text-[#008] text-[12px] w-full '>* optional</span></label>
+            <textarea value={excerpt} onChange={({ target }) => setBlogExcerpt(target.value)} name="except" id="except" className="w-full max-w-[450px] h-[100px] min-h-[50px] max-h-[60px] p-3 border text-[14px] focus:outline-none resize-none" />
+          </div>
           <p>
-            Add cover Image <span className="text-[#a00]">*required</span>
+           {blog?.coverImage?'Update':'Add'} cover Image <span className="text-[#a00]">*required</span>
           </p>
           <ImageUploadButton
             fn={(images: any[], err?: string) => {
@@ -315,10 +319,6 @@ export default function CreatePost({ blog }: { blog?: feed }) {
               setCoverImageUrl(images[0].fileUrl)
             }}
           />
-          <div>
-            <label htmlFor="except">Except <span className='resize-none text-[#008] text-[12px] w-full '>* optional</span></label>
-            <textarea value={excerpt} onChange={({ target }) => setBlogExcerpt(target.value)} name="except" id="except" className="w-full max-w-[450px] h-[100px] min-h-[50px] max-h-[60px] p-3 border text-[14px] focus:outline-none resize-none" />
-          </div>
         </div>
       </div>
 
