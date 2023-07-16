@@ -38,7 +38,18 @@ class userServices{
        
         return result;
     }
-   
+    static async getUser(id:string){
+        const url = baseUrl + '/users?id=' + id;
+        const request = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const response = await fetch(url, request);
+        const result = await response.json();
+        return result;
+    }
 }
 
 

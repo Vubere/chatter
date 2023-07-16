@@ -55,13 +55,12 @@ export default function Login() {
 
     const res = await userServices.login(data.email, data.password)
     
-
+    
     if (!res?.error) {
       dispatch(setUser({ ...res.user, password: encrypt(data.password) }))
       if (typeof window !== 'undefined') {
         window.localStorage.setItem('chatterUser', JSON.stringify({ ...res.user, password: encrypt(data.password) }))
       }
-
       configureAlert('success', 'User logged in successfully', () => {
         router.push('/dashboard')
       })

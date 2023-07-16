@@ -1,3 +1,4 @@
+import AuthRedirect from '@/app/components/AuthRedirect'
 import {Metadata} from 'next'
 
 

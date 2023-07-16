@@ -17,17 +17,15 @@ export default function Blogs({ user }: { user: User }) {
     bookmarks
   }
   const show = holder[type]
+ 
   return (
-    <div className="w-full h-[100vh] overflow-auto pb-[150px]">
-      <ul className="flex justify-between">
+    <div className="w-full h-[100vh] overflow-auto pb-[150px] static">
+      <ul className="flex justify-between z-20 bg-[#fff] h-[40px] sticky top-[-20px]">
         <li onClick={() => setType('posts')} className={`${type == 'posts' ? 'border-b-[3px] border-[#543ee0]' : ''} w-[30%] text-center text-[18px] pb-4`}>Posts</li>
         <li onClick={() => setType('likes')} className={`${type == 'likes' ? 'border-b-[3px] border-[#543ee0]' : ''} w-[30%] text-center text-[18px] pb-4`}>Likes</li>
         <li onClick={() => setType('bookmarks')} className={`${type == 'bookmarks' ? 'border-b-[3px] border-[#543ee0]' : ''} w-[30%] text-center text-[18px] pb-4`}>Bookmarks</li>
       </ul>
-      {type == 'posts' && <BlogSection blogs={posts} />}
-      {type == 'likes' && <BlogSection blogs={likes} />}
-      {type == 'bookmarks' && <BlogSection blogs={bookmarks} />}
-      {show.length == 0 && <p className="text-center text-[#626262] mt-4">No {type} yet</p>
+      {show.length == 0 && <p className="text-center text-[#626262] mt-4 bg-red">No {type} yet</p>
       }
       <BlogSection blogs={show} />
     </div>
@@ -36,9 +34,9 @@ export default function Blogs({ user }: { user: User }) {
 
 
 function BlogSection({ blogs }: { blogs: string[] }) {
-
+  
   return (
-    <div >
+    <div className="h-[100vh] overflow-y-auto pb-[120px]">
       {
         blogs.map(blog => <Blog key={blog} id={blog} />)
       }
@@ -46,7 +44,7 @@ function BlogSection({ blogs }: { blogs: string[] }) {
   )
 }
 
-function Blog({ id }: { id: string }) {
+export function Blog({ id }: { id: string }) {
   const [feed, setFeed] = useState<feed>()
   const [loading, setLoading] = useState(true)
 

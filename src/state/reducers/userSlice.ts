@@ -9,8 +9,10 @@ type UserT = User & { _id: string };
 let initialState: UserT | null = null;
 
 if (typeof window !== "undefined") {
-  initialState = localStorage.getItem("chatterUser")
-    ? JSON.parse(localStorage.getItem("chatterUser")!)
+  const lsS = localStorage.getItem('chatterUser')
+  
+  initialState = lsS
+    ? JSON.parse(lsS)
     : null;
 }
 
