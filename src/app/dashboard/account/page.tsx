@@ -12,7 +12,7 @@ import { useAppSelector } from "@/state/hooks";
 
 export default function Account() {
   const user = useAppSelector((state) => state.user);
-  if (user === null) return (<>Loading...</>)
+  if (!user) return (<>Loading...</>)
 
  
   return (

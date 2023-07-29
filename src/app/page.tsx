@@ -24,14 +24,14 @@ import peopleIcon from '@/icons/people.svg'
 import documentIcon from '@/icons/document.svg'
 
 
-export const metadata:Metadata = {
+export const metadata: Metadata = {
   title: 'Chatter|Landing Page',
   description: ''
 }
 
 export default function Home() {
 
-  
+
   return (
     <div>
       <Header />
@@ -60,7 +60,7 @@ function Hero() {
           <p className='text-[24px] font-[500] leading-[36px] text-white w-[70%]'>
             Unleash the Power of Words, Connect with Like-minded Readers and Writers
           </p>
-          <Link href={'/sign_up'} className='mt-8 block w-[157px]'>
+          <Link href={'/sign-in'} className='mt-8 block w-[157px]'>
             <BlueButton>
               Get started
             </BlueButton>
@@ -133,9 +133,11 @@ function Reviews() {
           <div className='mb-10'>
             <h4 className='font-[500] leading-[48px] text-[32px]'>Adebobola Muhydenn, <span className='leading-[27px] text-[18px] font-[400]'>Software developer at Apple</span></h4>
           </div>
-          <BlueButton className='w-[157px] h-[56px] text-[18px] font-[700]'>
-            Join Chatter
-          </BlueButton>
+          <Link href='/sign-in'>
+            <BlueButton className='w-[157px] h-[56px] text-[18px] font-[700]'>
+              Join Chatter
+            </BlueButton>
+          </Link>
         </article>
       </div>
     </section>
@@ -154,7 +156,7 @@ function Expo() {
       <article>
         <h4 className='text-[48px] leading-[72px] font-[700] text-[#111] mb-4'>Write, read and connect with great minds on chatter</h4>
         <p className='text-[18px] leading-[27px] mb-10'>Share people your great ideas, and also read write-ups based on your interests connect with people of same interests and goals</p>
-        <Link href={''} className='w-[157px]'>
+        <Link href={'/sign-in'} className='w-[157px]'>
           <BlueButton className='text-[18px] '>
             Get Started
           </BlueButton>

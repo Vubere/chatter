@@ -19,12 +19,12 @@ import bgImg from '@/assets/signUpPage/bgImg.png'
 
 
 export default function SignIn() {
-  let ses:any = 'Sign up'
+  let ses:any = 'Sign in'
   if(typeof window !== 'undefined')
   ses = sessionStorage.getItem('suv')
   
   if (!ses) {
-    ses = 'Login'
+    ses = 'Sign in'
   }
   const [curView, setCurView] = useState(ses)
 

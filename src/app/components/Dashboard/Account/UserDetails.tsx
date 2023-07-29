@@ -4,6 +4,7 @@ import { useAppSelector } from "@/state/hooks"
 
 /* next components */
 import Image from "next/image"
+import Link from "next/link"
 
 /* custom components */
 import Avatar from "../../Avatar"
@@ -16,7 +17,7 @@ import { User } from "@/types"
 
 
 
-export default function UserDetails({user}:{user:User}) {
+export default function UserDetails({ user }: { user: User }) {
 
 
 
@@ -40,10 +41,11 @@ export default function UserDetails({user}:{user:User}) {
           <p>{user.bio || <span>...no bio</span>}</p>
         </div>
         <div className="w-full flex flex-col items-end">
-
-          <BlueButton className="w-[40px] h-[25px] flex items-center justify-center">
-            <Image src={edit} alt='edit' className="w-[20px] h-[15px]" />
-          </BlueButton>
+          <Link href="/dashboard/account/edit">
+            <BlueButton className="w-[40px] h-[25px] flex items-center justify-center">
+              <Image src={edit} alt='edit' className="w-[20px] h-[15px]" />
+            </BlueButton>
+          </Link>
         </div>
       </article>
 
