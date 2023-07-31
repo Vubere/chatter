@@ -22,33 +22,25 @@ import Avatar from '../Avatar'
 import { format } from 'date-fns'
 
 export default function Feed() {
-  const [feed, setFeed] = useState()
-  const [currentView, setCurrentView] = useState<'For You'|'Recent'|'Following'>('For You')
+  const [feed, setFeed] = useState([])
+  const [currentView, setCurrentView] = useState<'For You' | 'Recent' | 'Following'>('For You')
 
-  useEffect(()=>{
-    const url = currentView == 'For You'? '':currentView=='Recent'?'':'';
-    fetch(url)
-    .then(res=>res.json)
-    .then(data=>console.log(data))
-    .catch(err=>console.log(err))
-    
-  },[currentView])
 
   return (
     <main className="p-4 w-full h-full pb-20">
-      <FeedHeading currentView={currentView} setCurrentView={setCurrentView}/>
+      <FeedHeading currentView={currentView} setCurrentView={setCurrentView} />
       {
-        feed?
-        <FeedContent feed={feed} />
-        :null
+        feed ?
+          <FeedContent feed={feed} type={currentView} />
+          : null
       }
     </main>
   )
 }
 
 
-function FeedHeading({currentView, setCurrentView}: {
-  currentView: string,
+function FeedHeading({ currentView, setCurrentView }: {
+  currentView: 'For You' | 'Recent' | 'Following',
   setCurrentView: Dispatch<SetStateAction<'For You' | 'Recent' | 'Following'>>
 }) {
 
@@ -57,9 +49,13 @@ function FeedHeading({currentView, setCurrentView}: {
   return (
     <nav className='w-full border border-[#626262] rounded-[4px] h-[60px] sticky top-[-20px] bg-[#fff] z-20'>
       <ul className='flex items-center justify-between px-4 block py-4 h-full'>
-        <li className={'text-[24px] leading-[36px] text-[#111] font-[700] block h-[60px] flex items-center ' + activeClass}>For You</li>
-        <li className='text-[24px] leading-[36px] text-[#111] font-[700] h-fullblock h-[60px] flex items-center'>Recent</li>
-        <li className='text-[24px] leading-[36px] text-[#111] font-[700] h-full block h-[60px] flex items-center'>Following</li>
+        <li className={'text-[24px] leading-[36px] text-[#111] font-[700] block h-[60px] flex items-center ' + (currentView == "For You" ? activeClass : '')}
+          onClick={() => setCurrentView('For You')}>For You</li>
+        <li className={'text-[24px] leading-[36px] text-[#111] font-[700] block h-[60px] flex items-center ' + (currentView == 'Recent' ? activeClass : '')}
+          onClick={() => setCurrentView('Recent')}>Recent</li>
+        <li className={'text-[24px] leading-[36px] text-[#111] font-[700] block h-[60px] flex items-center ' + (currentView == 'Following' ? activeClass : '')}
+          onClick={() => setCurrentView('Following')}
+        >Following</li>
       </ul>
     </nav>
   )
@@ -68,22 +64,40 @@ function FeedHeading({currentView, setCurrentView}: {
 
 
 interface feedContentProp {
-  feed: feedT[]
+  feed: feedT[],
+  type: 'For You' | 'Recent' | 'Following'
 }
 
 
-function FeedContent({ feed }: feedContentProp) {
+
+function FeedContent({ feed, type }: feedContentProp) {
+  let NoFeedContent: React.ReactNode = null
+  console.log(type)
+  if (feed.length == 0) {
+    console.log(type)
+    switch (type) {
+      case 'For You': NoFeedContent = (<p className=' mt-4'>Add interest to get tailored blogs</p>)
+        break;
+      case 'Following': NoFeedContent = (<p className='mt-4'>Follow more users to see blog content</p>)
+      break;
+      case 'Recent': NoFeedContent = (<p className='mt-4'>No recent blogs to display</p>)
+      break;
+      default : break;
+    }
+  }
+
   return (
     <>
-      {feed.length === 0 ? <p className='text-[#626262] text-[18px] leading-[27px] pt-8'>No content available</p> :
-        <section className='w-full border border-[#111]  h-full '>
-          {feed.map((item) => (
-            <div key={item._id} className='border p-8'>
-              <Post feed={item} />
-            </div>
-          ))}
-        </section>
-      }
+
+      {!!feed.length&&<section className='w-full border border-[#111]  h-full '>
+        {feed.map((item) => (
+          <div key={item._id} className='border p-8'>
+            <Post feed={item} />
+          </div>
+        ))}
+      </section>}
+      {NoFeedContent}
+
     </>
   )
 }
@@ -92,7 +106,7 @@ function Post({ feed }: { feed: feedT }) {
   const created = format(formalCreatedAt, 'MMM dd, yyyy')
   return (
     <article className='max-w-[800px] w-[90%]'>
-      
+
       <header className='flex gap-2 mb-2'>
         <div className='w-[96px] h-[96px] relative border rounded-full'>
           <Avatar src={feed.author.avatar} className='' alt={feed.author.firstName} fill={true} />
