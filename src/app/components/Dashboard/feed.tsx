@@ -20,20 +20,20 @@ import { feedT } from '@/types'
 /* fakedata */
 import Avatar from '../Avatar'
 import { format } from 'date-fns'
+import AddInterest from './AddInterest'
+import { useGetRecentBlogsQuery, useGetUserBlogByFollowingQuery, useGetUserBlogByInterestQuery } from '@/state/api/api'
+import { useAppSelector } from '@/state/hooks'
 
 export default function Feed() {
-  const [feed, setFeed] = useState([])
   const [currentView, setCurrentView] = useState<'For You' | 'Recent' | 'Following'>('For You')
 
 
   return (
     <main className="p-4 w-full h-full pb-20">
       <FeedHeading currentView={currentView} setCurrentView={setCurrentView} />
-      {
-        feed ?
-          <FeedContent feed={feed} type={currentView} />
-          : null
-      }
+
+      <FeedContent type={currentView} />
+
     </main>
   )
 }
@@ -64,32 +64,57 @@ function FeedHeading({ currentView, setCurrentView }: {
 
 
 interface feedContentProp {
-  feed: feedT[],
   type: 'For You' | 'Recent' | 'Following'
 }
 
 
 
-function FeedContent({ feed, type }: feedContentProp) {
+function FeedContent({ type }: feedContentProp) {
   let NoFeedContent: React.ReactNode = null
-  console.log(type)
+  const user = useAppSelector((state) => state.user)
+  let feed: feedT[] = []
+  const interest = useGetUserBlogByInterestQuery(user ? user._id : '', { refetchOnReconnect: true })
+  const recent = useGetRecentBlogsQuery(undefined, { refetchOnReconnect: true })
+  const following = useGetUserBlogByFollowingQuery(user ? user._id : '', { refetchOnReconnect: true })
+
+
+  switch (type) {
+    case 'For You':
+      if(interest.isLoading) return (<p className='mt-4'>Loading...</p>)
+      if(interest.isSuccess){
+        feed = interest.currentData?.blogs || []
+      } 
+    break;
+    case 'Recent':
+      if (recent.isLoading) return (<p className='mt-4'>Loading...</p>)
+      if (recent.isSuccess) {
+        feed = recent.currentData?.blogs || []
+      } 
+      break;
+    case 'Following': 
+      if (following.isLoading) return (<p className='mt-4'>Loading...</p>)
+      if (following.isSuccess) {
+        feed = following.currentData?.blogs || []
+      } 
+      break;
+    default: break;
+  }
   if (feed.length == 0) {
-    console.log(type)
     switch (type) {
       case 'For You': NoFeedContent = (<p className=' mt-4'>Add interest to get tailored blogs</p>)
         break;
       case 'Following': NoFeedContent = (<p className='mt-4'>Follow more users to see blog content</p>)
-      break;
+        break;
       case 'Recent': NoFeedContent = (<p className='mt-4'>No recent blogs to display</p>)
-      break;
-      default : break;
+        break;
+      default: break;
     }
   }
 
   return (
     <>
 
-      {!!feed.length&&<section className='w-full border border-[#111]  h-full '>
+      {!!feed.length && <section className='w-full border border-[#111]  h-full '>
         {feed.map((item) => (
           <div key={item._id} className='border p-8'>
             <Post feed={item} />
@@ -97,7 +122,9 @@ function FeedContent({ feed, type }: feedContentProp) {
         ))}
       </section>}
       {NoFeedContent}
-
+      {feed.length < 5 && type=='For You' && (
+        <AddInterest />
+      )}
     </>
   )
 }

@@ -42,6 +42,10 @@ const userSchema = new Schema<IUser>({
     type: [String],
     default: [],
   },
+  interest: {
+    type: [String],
+    default: []
+  },
   createdAt: {
     type: Date,
     default: Date.now,

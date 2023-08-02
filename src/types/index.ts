@@ -34,6 +34,7 @@ type User = {
   followers: number[];
   following: number[];
   bookmarks: string[];
+  interest: string[];
   posts: string[];
   profession: string;
   likes: string[];
