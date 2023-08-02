@@ -10,9 +10,9 @@ export async function GET(
   const id = params.user_id;
   try {
     if (id) {
-      const user = await UserModel.findById(id).exec();
+      const user = await UserModel.find({_id:id, state: 'published'}).exec();
       if (user) {
-        const interest = user.interest;
+        const interest = user[0].interest;
         const blog_array: feedT[] = [];
         for (let i = 0; i < interest.length; i++) {
           const blogs = await BlogPostModel.find({ interest: interest[i] })

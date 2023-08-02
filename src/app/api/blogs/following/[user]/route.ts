@@ -31,7 +31,7 @@ export async function GET(
         });
       } else {
         if (userDetails.following.length > 0) {
-          const blogs = await BlogPostModel.find({})
+          const blogs = await BlogPostModel.find({state:'published', author: { $in: userDetails.following }})
             .sort({ createdAt: -1 })
             .limit(1000)
             .exec();
