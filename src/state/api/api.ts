@@ -75,15 +75,12 @@ const chatterApi = createApi({
     }),
 
     updateUserInterest: builder.mutation({
-      query: ({ _id, interest }: { _id: string; interest: string[] }) => ({
+      query: (body: { _id: string; interest: string[] }) => ({
         url: "users/interest",
         method: "POST",
-        body: {
-          _id,
-          interest,
-        },
+        body: body,
       }),
-      invalidatesTags: (_: any, _2: any, { _id }: { _id: string }) => [
+      invalidatesTags: (_: any, _2: any, { _id }: { _id: string, interest:string[] }) => [
         { type: "USERS", id: _id },
       ],
     }),
