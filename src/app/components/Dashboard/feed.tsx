@@ -80,22 +80,22 @@ function FeedContent({ type }: feedContentProp) {
 
   switch (type) {
     case 'For You':
-      if(interest.isLoading) return (<p className='mt-4'>Loading...</p>)
-      if(interest.isSuccess){
+      if (interest.isLoading) return (<p className='mt-4'>Loading...</p>)
+      if (interest.isSuccess) {
         feed = interest.currentData?.blogs || []
-      } 
-    break;
+      }
+      break;
     case 'Recent':
       if (recent.isLoading) return (<p className='mt-4'>Loading...</p>)
       if (recent.isSuccess) {
         feed = recent.currentData?.blogs || []
-      } 
+      }
       break;
-    case 'Following': 
+    case 'Following':
       if (following.isLoading) return (<p className='mt-4'>Loading...</p>)
       if (following.isSuccess) {
         feed = following.currentData?.blogs || []
-      } 
+      }
       break;
     default: break;
   }
@@ -122,7 +122,7 @@ function FeedContent({ type }: feedContentProp) {
         ))}
       </section>}
       {NoFeedContent}
-      {feed.length < 5 && type=='For You' && (
+      {feed.length < 5 && type == 'For You' && (
         <AddInterest />
       )}
     </>
@@ -146,14 +146,16 @@ function Post({ feed }: { feed: feedT }) {
           </div>
         </div>
       </header>
-      <main>
-        <h1 className='text-[32px] leading-[48px] font-[500] mb-4'>{feed.title}</h1>
-        <span className='flex gap-2  font-[400] leading-[24px] text-[16px] text-[#626262]'><Image src={book} alt='book' /> {feed.minRead} min read</span>
-        <p className='text-[#626262]  leading-[24px] text-[18px] text-[#626262] w-[95%] mb-4'>{feed.excerpt}</p>
-        <div className='w-full relative h-[200px]'>
-          <Image src={feed.coverImage} alt={feed.title} fill={true} />
-        </div>
-      </main>
+      <Link href={`/blog/${feed._id}`}>
+        <main>
+          <h1 className='text-[32px] leading-[48px] font-[500] mb-4'>{feed.title}</h1>
+          <span className='flex gap-2  font-[400] leading-[24px] text-[16px] text-[#626262]'><Image src={book} alt='book' /> {feed.minRead} min read</span>
+          <p className='text-[#626262]  leading-[24px] text-[18px] text-[#626262] w-[95%] mb-4'>{feed.excerpt}</p>
+          <div className='w-full relative h-[200px]'>
+            <Image src={feed.coverImage} alt={feed.title} fill={true} />
+          </div>
+        </main>
+      </Link>
       {feed.state.toLowerCase() == 'published' && <footer className='flex w-full justify-between items-center mt-2'>
         <div className='flex gap-2 items-center'>
           <Image src={comment} alt='comment' width={24} height={24} />
